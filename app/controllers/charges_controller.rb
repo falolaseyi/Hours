@@ -1,4 +1,6 @@
 class ChargesController < ApplicationController
+  before_action :is_chargin_set?
+
   def new
   end
 
@@ -21,5 +23,10 @@ class ChargesController < ApplicationController
   def user_count
     @user_count ||= User.count
   end
-end
 
+  def is_chargin_set?
+    Hours.single_tenant_mode? == false &&
+      ENV["STRIPE_PUBLIC_KEY"] &&
+      ENV["STRIPE_SECRET_KEY"]
+  end
+end
